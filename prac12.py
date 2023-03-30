@@ -4,12 +4,26 @@ from PIL import Image
 from sklearn.datasets import load_iris
 import pandas as pd
 
-b1 = st.sidebar.button('이미지 분류')
-b2 = st.sidebar.button('텍스트 분류')
-b3 = st.sidebar.button('Speech2Text')
-b4 = st.sidebar.button('시계열 데이터 예측')
+def number(wine_df1):
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        col1_1, col1_2 = st.columns(2)
+        col1_1.header('최대 : ')
+        col1_2.header(max(wine_df1))
 
-if b1:
+    with col2:
+        col2_1, col2_2 = st.columns(2)
+        col2_1.header('최소 : ')
+        col2_2.header(min(wine_df1))
+
+    with col3:
+        col3_1, col3_2 = st.columns(2)
+        col3_1.header('평균 : ')
+        col3_2.header(round(sum(wine_df1)/len(wine_df1), 2))
+
+option = st.sidebar.selectbox('',('이미지 분류', '텍스트 분류', 'Speech2Text', '시계열 데이터 예측'))
+
+if option == '이미지 분류':
     st.header('이미지 분류')
     col1, col2, col3, col4, col5 = st.columns([10, 3, 5, 3, 6])
     with col1:
@@ -60,7 +74,7 @@ if b1:
 
     with col3:
         st.write('학습')
-        st.button('모델 학습시키기')
+        st.button('모델 학습')
         with st.expander('고급'):
             st.write('고급 기술')
 
@@ -78,35 +92,41 @@ if b1:
 
         st.write('여기서 모델을 미리 확인하려면 먼저 왼쪽에서 모델을 학습시켜야 합니다.')
 
-elif b2:
+elif option == '텍스트 분류':
     
     st.header('텍스트 분류')
 
     col1, col2 = st.columns(2)
 
     with col1:
-        test = st.text_area('분류할 구문을 넣어주세요','구문 적기')
-        st.write('')
+        test = st.text_area('분류할 구문을 넣어주세요','')
+        col3, col4 = st.columns(2)
+        
+        with col3:
+            bt = st.button('test')
+            if len(test) == 0 and bt:
+                st.write('텍스트를 적어주세요')
+            elif len(test) != 0 and bt:
+                st.write('분류중입니다.')
 
     with col2:
         st.write('구문텍스트의 감정 분류')
 
-    st.button('Test')
-
-elif b3:
-    st.header('Speech2Text / Text2Speech')
+elif option == 'Speech2Text':
+    st.header('Speech2Text')
 
     col1, col2 = st.columns(2)
 
     with col1:
         st.file_uploader('Upload a mp3 file')
-
-    with col2:
-        st.write('Download a Speech File')
-
-    st.text_area('Text to Speech / Speech to Text')
-
-elif b4:
+    
+    testfile = '' # 스피치로 받은 파일을 텍스트로 변환후 붙혀주기  
+    if len(testfile) == 0:
+        st.text_area('Speech to Text')
+    else:
+        st.text_area('Speech to Text')
+        
+elif option == '시계열 데이터 예측':
     st.header('시계열 데이터 예측')
 
     col1, col2 = st.columns(2)
@@ -117,8 +137,7 @@ elif b4:
         for uploaded_file in uploaded_files:
             bytes_data = uploaded_file.read()
             st.write("filename:", uploaded_file.name)
-            st.write(bytes_data)
-    
+
     with col2:
         col1_1, col1_2, col1_3 = st.columns(3)
         p_1 = col1_2.date_input('훈련 데이터 지정',datetime.date(1991, 1, 1))
@@ -131,5 +150,25 @@ elif b4:
     iris = load_iris()
     data = iris['data']
     df_iris = pd.DataFrame(data, columns=iris['feature_names'])
-    df_iris2 = df_iris['petal length (cm)'] # 임시시
-    st.line_chart(df_iris2)
+    
+    if uploaded_files:
+        data_df = pd.read_csv(uploaded_files)
+        occupation = st.selectbox('보실 목록을 선택하세요.',df_iris['feature_names'])
+        if occupation:
+            col_1, col_2 = st.columns(2)
+            df_iris_1 = df_iris[occupation]
+
+            with col_1:
+                start = st.slider('시작 점', 0, len(df_iris_1))
+
+            with col_2:
+                end = st.slider('끝 점', start, len(df_iris_1))
+
+            if start < end and end != 0:
+                df_iris_1 = df_iris[occupation][start:end+1]
+                st.line_chart(df_iris_1)
+                number(df_iris_1)
+            else:
+                df_iris_1 = df_iris[occupation][start:]
+                st.line_chart(df_iris_1)
+                number(df_iris_1)
