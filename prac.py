@@ -1,12 +1,15 @@
 #!/usr/bin/env python
 # coding: utf-8
 import streamlit as st
+import streamlit.components.v1 as components
 import datetime
 import pandas as pd
 
 from streamlit_agraph import agraph, Node, Edge, Config
 from streamlit_option_menu import option_menu
 from sklearn.datasets import load_wine
+
+
 
 wine = load_wine()
 data = wine['data']
@@ -85,7 +88,6 @@ with st.sidebar:
 #     }
 # )
 
-
 test = st.text_area('분류할 구문을 넣어주세요(Ctrl + Enter)','')
 col1, col2 = st.columns(2)
 with col1:
@@ -95,14 +97,13 @@ with col1:
     elif len(test) != 0 and bt:
         st.write('분류중입니다.')
 
-        
 from streamlit_cropper import st_cropper
 from PIL import Image
 st.set_option('deprecation.showfileUploaderEncoding', False)
 
 # Upload an image and set some options for demo purposes
 st.header("Cropper Demo")
-img_file = st.sidebar.file_uploader(label='Upload a file', type=['png', 'jpg','webp'])
+img_file = st.file_uploader(label='Upload a file', type=['png', 'jpg','webp'])
 realtime_update = st.sidebar.checkbox(label="Update in Real Time", value=True)
 box_color = st.sidebar.color_picker(label="Box Color", value='#0000FF')
 aspect_choice = st.sidebar.radio(label="Aspect Ratio", options=["1:1", "16:9", "4:3", "2:3", "Free"])
@@ -160,10 +161,56 @@ if img_file:
 #                       edges=edges, 
 #                       config=config)
 
-uploaded_files = st.file_uploader("Choose a CSV file", accept_multiple_files=True)
-for uploaded_file in uploaded_files:
-    st.write(type(uploaded_file))
-    bytes_data = uploaded_file.read()
-    st.write("filename:", uploaded_file.name)
-    data_df = pd.DataFrame(uploaded_file)
-    st.dataframe(data_df)
+# uploaded_files = st.file_uploader("Choose a CSV file", accept_multiple_files=True, type = ['csv'])
+
+# st.header('시계열 데이터 예측')
+
+# col1, col2 = st.columns(2)
+
+# with col1:
+        
+#     uploaded_files = st.file_uploader("Choose a CSV file", accept_multiple_files=True)
+        
+# with col2:
+#     col1_1, col1_2, col1_3 = st.columns(3)
+#     p_1 = col1_2.date_input('훈련 데이터 지정',datetime.date(1991, 1, 1))
+#     p_2 = col1_3.date_input('',datetime.date(2009, 12, 31))
+
+#     col2_1, col2_2, col2_3 = st.columns(3)
+#     v_1 = col2_2.date_input('검증 데이터 지정',datetime.date(2010, 1, 1))
+#     v_2 = col2_3.date_input('',datetime.date(2014, 12, 31))
+    
+# for uploaded_file in uploaded_files:
+#     df = pd.read_csv(uploaded_file)
+#     st.dataframe(df)
+
+cabu = st.checkbox('live_camera')
+if cabu:
+    img_file_buffer = st.camera_input("Take a picture")
+    if img_file_buffer is not None:
+        col1_1_1_,col1_1_2_,col1_1_3_ = st.columns(3)
+        realtime_update1 = col1_1_1_.checkbox(label="Update in Real Time", value=True)
+        box_color1 = col1_1_2_.color_picker(label="Box Color", value='#0000FF')
+        aspect_choice1 = col1_1_3_.radio(label="Aspect Ratio", options=["1:1", "16:9", "Free"])
+
+        aspect_dict1 = {
+            "1:1": (1, 1),
+            "16:9": (16, 9),
+            "Free": None
+        }
+        aspect_ratio1 = aspect_dict1[aspect_choice1]
+
+        if img_file_buffer:
+            img = Image.open(img_file_buffer)
+            if not realtime_update:
+                st.write("Double click to save crop")
+            # Get a cropped image from the frontend
+            cropped_img = st_cropper(img, realtime_update=realtime_update1, box_color=box_color1,
+                                        aspect_ratio=aspect_ratio1)
+
+            # Manipulate cropped image at will
+            st.write("Preview")
+            cropped_img_1 = cropped_img.thumbnail((150,150))
+    if cropped_img_1 is not none:
+        st.image(cropped_img)
+        st.write(type(bytes_data))
