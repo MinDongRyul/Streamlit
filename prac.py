@@ -9,8 +9,6 @@ from streamlit_agraph import agraph, Node, Edge, Config
 from streamlit_option_menu import option_menu
 from sklearn.datasets import load_wine
 
-
-
 wine = load_wine()
 data = wine['data']
 wine_df = pd.DataFrame(data, columns=wine['feature_names'])
