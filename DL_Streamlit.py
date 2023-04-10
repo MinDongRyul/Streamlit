@@ -1,5 +1,5 @@
 import streamlit as st
-
+import joblib
 import pandas as pd
 from sklearn.datasets import load_iris
 
@@ -25,9 +25,11 @@ st.title('Streamlit & CNN vs TL')
 tab1, tab2, tab3 = st.tabs(["Streamlit", "CNN vs TL", "Code"])
 
 with tab1:
-    st.subheader("빅데이터와 머신러닝을 간단하게 배포할수 있는 파이썬(Python) 기반의 웹어플리케이션")
+    st.subheader("Streamlit : 빅데이터와 머신러닝을 간단하게 배포할수 있는 파이썬(Python) 기반의 웹어플리케이션")
 
     st.subheader(" ")
+    
+    st.subheader("데이터 관측")
     
     iris = load_iris()
     data = iris['data']
@@ -51,7 +53,34 @@ with tab1:
             df_iris_1 = df_iris[occupation][start:]
             st.line_chart(df_iris_1)
             number(df_iris_1)
-
+    
+    st.subheader(" ")
+    
+    st.subheader("데이터 예측")
+    
+    text1, text2 = st.columns(2)
+    with text1:
+        x1 = st.text_input('sepal length (cm)', '')
+    with text2:
+        x2 = st.text_input('sepal width (cm)', '')
+        
+    text3, text4 = st.columns(2)   
+    with text3:
+        x3 = st.text_input('petal length (cm)', '')
+    with text4:
+        x4 = st.text_input('petal width (cm)', '')
+        
+    if len(str(x1)) > 0 and len(str(x2)) > 0 and len(str(x3)) > 0 and len(str(x4)) > 0: 
+        pred_df= pd.DataFrame([[x1, x2, x3, x4]], columns=iris['feature_names'])
+        clf_from_joblib = joblib.load('classification_model.pkl') 
+        pred = clf_from_joblib.predict(pred_df)
+        if pred[0] == 0:
+            st.write('The predicted species is setosa')
+        elif pred[0] == 1:
+            st.write('The predicted species is versicolor')
+        elif pred[0] == 2:
+            st.write('The predicted species is virginica')
+    
 with tab2:
     st.subheader("CNN VS TL")
     
