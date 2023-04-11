@@ -105,19 +105,15 @@ import matplotlib.pyplot as plt
 import numpy as np'''
 
     st.code(import_code, 'python')
-    
-    
-    cnn, tl = st.columns(2)
-    
-    with cnn:
-        st.caption('CNN 네트워크 구축')
-        cnn_code = '''model = models.Sequential()
+      
+    st.caption('CNN 네트워크 구축')
+    cnn_code = '''model = models.Sequential()
 model.add(layers.Conv2D(32, (3,3), activation='relu', input_shape=(150, 150, 3)))
-# Conv2D : 이미지이기에
+# Conv2D : 이미지는 2D, 동영상은 3D
 # 필터 : 32
 # kernel size : 3
-# activation : 활성화함수
-# input_shape : 150, 150, 3(너비, 높이, 채널(여기서는 컬러이기에 3))
+# activation : relu함수를 활성화 함수로 사용
+# input_shape : 150, 150, 3(너비, 높이, 채널(여기서는 컬러이기에 3, 흑백이면 1))
 # (3, 3) -> kernel_size ([3, 3] or 3, (3,3) 가능)
 model.add(layers.MaxPooling2D((2,2))) # 2x2로 pooling
 model.add(layers.Conv2D(64, (3,3), activation='relu'))
@@ -129,11 +125,10 @@ model.add(layers.MaxPooling2D(2,2))
 model.add(layers.Flatten()) # 1차원 벡터로 나열하기 위함
 model.add(layers.Dense(512, activation='relu'))
 model.add(layers.Dense(1, activation='sigmoid'))'''
-        st.code(cnn_code, 'python')
+    st.code(cnn_code, 'python')
         
-    with tl:
-        st.caption('TL 네트워크 구축')
-        tl_code = '''base_model = MobileNet(weights='imagenet', include_top = False, input_shape=(150, 150, 3))
+    st.caption('TL 네트워크 구축')
+    tl_code = '''base_model = MobileNet(weights='imagenet', include_top = False, input_shape=(150, 150, 3))
 # MobileNet : Pre-trained model
 # include_top = False : 특징 추출기로만사용 
 model = Sequential()
@@ -143,9 +138,12 @@ model.add(Flatten())
 model.add(Dense(512, activation='relu'))
 model.add(Dropout(0.25))
 model.add(Dense(1, activation='sigmoid'))'''
-        st.code(tl_code, 'python')
+    st.code(tl_code, 'python')
     
-    same_code = '''model.compile(optimizer=optimizers.Adam(learning_rate=2e-5), # lr : learnint rate 설정
+    st.caption('같은 부분')
+    
+    same_code = '''model.compile(optimizer=optimizers.Adam(learning_rate=2e-5), 
+              # learning_rate : learnint rate 설정
               loss='binary_crossentropy',
               metrics=['accuracy'])# 최적화, 손실함수, 성능평가지표
               
@@ -156,14 +154,14 @@ test_datagen = ImageDataGenerator(rescale=1./255)
 train_generator = train_datagen.flow_from_directory(
     train_dir, # 타겟 디렉토리
     target_size=(150,150),
-    batch_size=20,
+    batch_size=40,
     class_mode='binary'
 )
 
 val_generator = test_datagen.flow_from_directory(
     val_dir,
     target_size=(150, 150),
-    batch_size=20,
+    batch_size=40,
     class_mode='binary'
 )
 
@@ -204,7 +202,7 @@ history_plot(history.history)
 test_generator = test_datagen.flow_from_directory(
         test_dir,
         target_size=(150, 150),
-        batch_size=20,
+        batch_size=40,
         class_mode='binary')
 
 test_loss, test_acc = model.evaluate(test_generator, steps=50)
@@ -221,6 +219,8 @@ print('test acc:', test_acc)
         st.write(' ')
         cnn_loss = Image.open('cnn_loss.png')
         st.image(cnn_loss, caption='CNN loss')
+        st.write('총 실행 시간 : 16분 49초')
+        st.write('test data acc : 77.4%')
 #         st.write(' ')
 #         cnn_test_acc = Image.open('cnn_test_acc.png')
 #         st.image(cnn_test_acc, caption='CNN test data accuracy')
@@ -232,6 +232,8 @@ print('test acc:', test_acc)
         st.write(' ')
         tl_loss = Image.open('tl_loss.png')
         st.image(tl_loss, caption='TL loss')
+        st.write('총 실행 시간 : 37분 14초')
+        st.write('test data acc : 94.5%')
 #         st.write(' ')
 #         tl_test_acc = Image.open('tl_test_acc.png')
 #         st.image(tl_test_acc, caption='TL test data accuracy')
