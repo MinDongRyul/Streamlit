@@ -89,7 +89,7 @@ with tab2:
     
     st.subheader(" ")
     
-    st.caption('import')
+    st.caption('필요 라이브러리 임포트 ')
     
     import_code = '''
 import tensorflow as tf
@@ -166,10 +166,14 @@ val_generator = test_datagen.flow_from_directory(
 )
 
 # 배치 제너레이터를 사용하여 모델 훈련하기
+# steps_per_epoch : 하나의 에포크를 정의하기 위해 제너레이터로부터 얼마나 많은 샘플을 뽑을 것인지 지정
+# validation_data : 데이터 제너레이터 혹은 넘파이 배열의 튜플 데이터 제너레이터를 사용하는 경우 검증 
+# 데이터의 배치를 끝없이 반환하므로 얼마나 많은 배치를 추출하여 평가할지 validation_steps 변수에 지정
+# generator : 입력과 타겟의 배치를 끝없이 반환하는 파이썬 제너레이터를 첫번째 변수로 입력
 history = model.fit(
     train_generator, 
-    steps_per_epoch=100,
-    epochs=30, 
+    steps_per_epoch=100
+    epochs=30, # 총 30회 실시  
     validation_data= val_generator,
     validation_steps=50)
     
@@ -186,12 +190,14 @@ def history_plot(history_dict):
     epochs = np.arange(1, len(acc)+1)
     plt.plot(epochs, acc,'bo', label='train')
     plt.plot(epochs, val_acc, label='val')
+    plt.yticks([0.5, 0.6, 0.7, 0.8, 0.9, 1])
     plt.title('Accuracy')
     plt.legend()
     plt.show()
 
     plt.plot(epochs, loss, 'bo', label='train')
     plt.plot(epochs, val_loss, label='val')
+    plt.yticks([0, 0.25, 0.5, 0.75, 1])
     plt.title('Loss')
     plt.legend()
     plt.show()
@@ -204,7 +210,6 @@ test_generator = test_datagen.flow_from_directory(
         target_size=(150, 150),
         batch_size=40,
         class_mode='binary')
-
 test_loss, test_acc = model.evaluate(test_generator, steps=50)
 print('test acc:', test_acc)
     ''' 
