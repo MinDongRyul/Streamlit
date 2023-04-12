@@ -59,7 +59,7 @@ with tab1:
     st.subheader(" ")
     
     st.subheader("예측")
-    st.write('sepal : 꽃받침, petal : 꽃잎')
+#     st.write('sepal : 꽃받침, petal : 꽃잎')
     
     text1, text2 = st.columns(2)
     with text1:
