@@ -1,10 +1,11 @@
 import streamlit as st
 import joblib
+import webbrowser
 import pandas as pd
 from sklearn.datasets import load_iris
 from keras.models import load_model
 from PIL import Image
-import webbrowser
+
 
 def number(data_df):
     col1, col2, col3 = st.columns(3)
