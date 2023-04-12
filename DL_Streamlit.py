@@ -4,6 +4,7 @@ import pandas as pd
 from sklearn.datasets import load_iris
 from keras.models import load_model
 from PIL import Image
+import webbrowser
 
 def number(data_df):
     col1, col2, col3 = st.columns(3)
@@ -23,7 +24,7 @@ def number(data_df):
         col3_2.header(round(sum(data_df)/len(data_df), 2))
 
 st.title('Streamlit & CNN vs TL')
-tab1, tab2, tab3 = st.tabs(["Streamlit", "CNN vs TL", "Code"])
+tab1, tab2, tab3 = st.tabs(["Streamlit", "CNN vs TL", "About code"])
 
 with tab1:
     st.subheader("Streamlit : 빅데이터와 머신러닝을 간단하게 배포할수 있는 파이썬(Python) 기반의 웹어플리케이션")
@@ -89,7 +90,7 @@ with tab2:
     
     st.subheader(" ")
     
-    st.caption('필요 라이브러리 임포트 ')
+    st.caption('필요 라이브러리 불러오기')
     
     import_code = '''
 import tensorflow as tf
@@ -226,9 +227,6 @@ print('test acc:', test_acc)
         st.image(cnn_loss, caption='CNN loss')
         st.write('총 실행 시간 : 16분 49초')
         st.write('test data acc : 77.4%')
-#         st.write(' ')
-#         cnn_test_acc = Image.open('cnn_test_acc.png')
-#         st.image(cnn_test_acc, caption='CNN test data accuracy')
         
     with tl_2:
         st.caption('TL')
@@ -239,11 +237,10 @@ print('test acc:', test_acc)
         st.image(tl_loss, caption='TL loss')
         st.write('총 실행 시간 : 37분 14초')
         st.write('test data acc : 94.5%')
-#         st.write(' ')
-#         tl_test_acc = Image.open('tl_test_acc.png')
-#         st.image(tl_test_acc, caption='TL test data accuracy')
     
 with tab3:
-    code = '''
-    print('hello python')'''
-    st.code(code, language='python')
+
+    if st.button('view code'):
+        webbrowser.open('https://github.com/MinDongRyul/Streamlit/blob/master/DL_Streamlit.py')
+        
+    
