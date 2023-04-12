@@ -5,3 +5,6 @@ joblib
 tensorflow
 keras
 pillow
+websocket-client
+webencodings
+opencv-python
