@@ -9,19 +9,19 @@ import webbrowser
 def number(data_df):
     col1, col2, col3 = st.columns(3)
     with col1:
-        col1_1, col1_2 = st.columns(2)
-        col1_1.header('최대 : ')
-        col1_2.header(max(data_df))
+        col1_1, col1_2 = st.columns([3.25,6.75])
+        col1_1.subheader('MAX : ')
+        col1_2.subheader(max(data_df))
 
     with col2:
-        col2_1, col2_2 = st.columns(2)
-        col2_1.header('최소 : ')
-        col2_2.header(min(data_df))
+        col2_1, col2_2 = st.columns([3.25,6.75])
+        col2_1.subheader('MIN : ')
+        col2_2.subheader(min(data_df))
 
     with col3:
-        col3_1, col3_2 = st.columns(2)
-        col3_1.header('평균 : ')
-        col3_2.header(round(sum(data_df)/len(data_df), 2))
+        col3_1, col3_2 = st.columns([3.25,6.75])
+        col3_1.subheader('AVG : ')
+        col3_2.subheader(round(sum(data_df)/len(data_df), 2))
 
 st.title('Streamlit & CNN vs TL')
 tab1, tab2, tab3 = st.tabs(["Streamlit", "CNN vs TL", "About code"])
@@ -31,7 +31,7 @@ with tab1:
 
     st.subheader(" ")
     
-    st.subheader("데이터 관측")
+    st.subheader("관측")
     
     iris = load_iris()
     data = iris['data']
@@ -58,7 +58,7 @@ with tab1:
     
     st.subheader(" ")
     
-    st.subheader("데이터 예측")
+    st.subheader("예측")
     st.write('sepal : 꽃받침, petal : 꽃잎')
     
     text1, text2 = st.columns(2)
@@ -75,15 +75,21 @@ with tab1:
         
     if len(str(x1)) > 0 and len(str(x2)) > 0 and len(str(x3)) > 0 and len(str(x4)) > 0: 
         pred_df= pd.DataFrame([[x1, x2, x3, x4]], columns=iris['feature_names'])
-        clf_from_joblib = joblib.load('classification_model.pkl') 
-        pred = clf_from_joblib.predict(pred_df)
-        proba = clf_from_joblib.predict_proba(pred_df)
-        if pred[0] == 0:
-            st.write('The predicted species with a probability of ' + str(round(proba[0][0] * 100, 2)) + '% is setosa')
-        elif pred[0] == 1:
-            st.write('The predicted species with a probability of ' + str(round(proba[0][1] * 100, 2)) + '% is versicolor')
-        elif pred[0] == 2:
-            st.write('The predicted species with a probability of ' + str(round(proba[0][2] * 100, 2)) + '% is virginica')
+        clf_from_joblib = joblib.load('classification_model.pkl')
+        try:
+            pred = clf_from_joblib.predict(pred_df)
+            proba = clf_from_joblib.predict_proba(pred_df)
+            if pred[0] == 0:
+                st.success('The predicted species with a probability of ' + str(round(proba[0][0] * 100, 2)) + '% is setosa')
+            elif pred[0] == 1:
+                st.success('The predicted species with a probability of ' + str(round(proba[0][1] * 100, 2)) + '% is versicolor')
+            elif pred[0] == 2:
+                st.success('The predicted species with a probability of ' + str(round(proba[0][2] * 100, 2)) + '% is virginica')
+        except:
+            st.error('Check your text box')
+
+
+
     
 with tab2:
     st.subheader("CNN 과 TL 비교")
