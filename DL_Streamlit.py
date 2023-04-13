@@ -28,11 +28,11 @@ st.title('Streamlit & CNN vs TL')
 tab1, tab2, tab3 = st.tabs(["Streamlit", "CNN vs TL", "About code"])
 
 with tab1:
-    st.subheader("Streamlit : 빅데이터와 머신러닝을 간단하게 배포할수 있는 파이썬(Python) 기반의 웹어플리케이션")
+    st.subheader("Streamlit : 파이썬(Python) 기반의 웹어플리케이션 프레임워크")
 
     st.subheader(" ")
     
-    st.subheader("관측")
+    st.subheader("시각화")
     
     iris = load_iris()
     data = iris['data']
