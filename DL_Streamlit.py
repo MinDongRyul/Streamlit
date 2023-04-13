@@ -178,6 +178,9 @@ val_generator = test_datagen.flow_from_directory(
 # validation_data : 데이터 제너레이터 혹은 넘파이 배열의 튜플 데이터 제너레이터를 사용하는 경우 검증 
 # 데이터의 배치를 끝없이 반환하므로 얼마나 많은 배치를 추출하여 평가할지 validation_steps 변수에 지정
 # generator : 입력과 타겟의 배치를 끝없이 반환하는 파이썬 제너레이터를 첫번째 변수로 입력
+
+# 2500의 dataset을 크기가 100인 dataset 25개로 나누어 학습을 진행할 때, 
+# batch size가 100인 batch 25개가 생성되어 1 epoch당 25번의 iteration
 history = model.fit(
     train_generator, 
     steps_per_epoch=100
