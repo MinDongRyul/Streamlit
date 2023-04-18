@@ -25,7 +25,7 @@ def number(data_df):
         col3_2.subheader(round(sum(data_df)/len(data_df), 2))
 
 st.title('Streamlit & CNN vs TL')
-tab1, tab2, tab3 = st.tabs(["Streamlit", "CNN vs TL", "About code"])
+tab1, tab2 = st.tabs(["Streamlit", "CNN vs TL"])
 
 with tab1:
     st.subheader("Streamlit : 파이썬(Python) 기반의 웹어플리케이션 프레임워크")
@@ -246,11 +246,4 @@ print('test acc:', test_acc)
         tl_loss = Image.open('tl_loss.png')
         st.image(tl_loss, caption='TL loss')
         st.write('총 실행 시간 : 37분 14초')
-        st.write('test data acc : 94.5%')
-    
-with tab3:
-
-    if st.button('view code'):
-        webbrowser.open('https://github.com/MinDongRyul/Streamlit/blob/master/DL_Streamlit.py')
-        
-    
+        st.write('test data acc : 94.5%') 
